@@ -5,7 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LocationPermission from './src/components/pages/LocationPermission';
 import HomePage from './src/components/pages/HomePage';
+import UserDetails from './src/components/pages/UserDetails';
+import LoadingPage from './src/components/pages/LoadingPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,10 +19,25 @@ export default function App() {
         <StatusBar style="auto" />
         <NavigationContainer>
           <Stack.Navigator>
+          <Stack.Screen
+              options={{ headerShown: false }}
+              name="LoadingPage"
+              component={LoadingPage}
+            />
             <Stack.Screen
               options={{ headerShown: false }}
-              name="Home" // Change name to Landing
-              component={HomePage} // Use LandingScreen component
+              name="LocationPermission"
+              component={LocationPermission}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="UserDetails"
+              component={UserDetails}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="HomePage"
+              component={HomePage}
             />
           </Stack.Navigator>
         </NavigationContainer>
