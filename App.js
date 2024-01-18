@@ -9,6 +9,7 @@ import LocationPermission from './src/components/pages/LocationPermission';
 import HomePage from './src/components/pages/HomePage';
 import UserDetails from './src/components/pages/UserDetails';
 import LoadingPage from './src/components/pages/LoadingPage';
+import Settings from './src/components/pages/Settings';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,11 @@ export default function App() {
               options={{ headerShown: false }}
               name="HomePage"
               component={HomePage}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Settings"
+              component={Settings}
             />
           </Stack.Navigator>
         </NavigationContainer>

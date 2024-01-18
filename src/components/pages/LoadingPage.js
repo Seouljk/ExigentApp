@@ -19,10 +19,9 @@ export default function LoadingPage() {
       <Image
         source={require('../logo/ExigentFinale.png')}
         style={{
-          width: 150,
-          height: 150,
-          marginTop: 50,
-          marginBottom: 10,
+          width: 120,
+          height: 120,
+          alignSelf: 'center',
         }}
       />
     </View>

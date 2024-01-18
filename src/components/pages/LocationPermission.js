@@ -13,12 +13,11 @@ export default function LocationPermission() {
   return (
     <View style={{ flex: 1, alignItems: 'center' }}>
       <Image
-        source={require('../logo/ExigentFinale.png')} 
+        source={require('../logo/ExigentFinaleLocationPermission.png')} 
         style={{ 
           width: 300, 
           height: 300, 
           marginTop: 50,
-          marginBottom: 10,
         }}
       />
       <Text style={{ fontSize: 30, fontWeight: 'bold' }}>What's Nearby?</Text>
@@ -26,13 +25,13 @@ export default function LocationPermission() {
         Hey there! Mind if we grab your location? It'll enhance your experience with personalized, location-based features.
       </Text>
 
-      <View style={{ position: 'absolute', bottom: 20, width: '80%' }}>
+      <View style={{ position: 'absolute', bottom: 0, width: '80%' }}>
         <TouchableOpacity
           style={{
-            backgroundColor: '#FFA500',
+            backgroundColor: '#3a88ed',
             padding: 20,
             borderRadius: 5,
-            marginBottom: 20,
+            marginBottom: 30,
             width: '100%',
           }}
           onPress={handleShareLocation}

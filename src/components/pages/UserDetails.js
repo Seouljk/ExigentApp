@@ -25,19 +25,23 @@ export default function UserDetails() {
           <Image
             source={require('../logo/ExigentFinale.png')}
             style={{
-              width: 150,
-              height: 150,
-              marginTop: 50,
-              marginBottom: 10,
+              width: 120,
+              height: 120,
+              marginTop: 30,
             }}
           />
+
+          <Text style={{ fontSize: 30, fontWeight: 'bold' }}> Welcome! </Text>
+          <Text style={{ fontSize: 15, textAlign: 'center', marginBottom: 20, color: '#808080' }}>
+            Mind if we grab small details from you?
+          </Text>
 
           <TextInput
             mode="outlined"
             label="Full Name"
             style={{
               width: '80%',
-              marginBottom: 10,
+              marginBottom: 5,
             }}
           />
 
@@ -46,7 +50,7 @@ export default function UserDetails() {
             label="Sex"
             style={{
               width: '80%',
-              marginBottom: 10,
+              marginBottom: 5,
             }}
           />
 
@@ -55,7 +59,7 @@ export default function UserDetails() {
             label="Birthday"
             style={{
               width: '80%',
-              marginBottom: 10,
+              marginBottom: 5,
             }}
           />
 
@@ -70,11 +74,11 @@ export default function UserDetails() {
 
         <TouchableOpacity
           style={{
-            backgroundColor: '#FFA500',
+            backgroundColor: '#3a88ed',
             padding: 20,
             alignSelf: 'center',
             borderRadius: 5,
-            marginBottom: 20,
+            marginBottom: 30,
             width: '80%',
           }}
           onPress={handleHomePage}
