@@ -23,53 +23,20 @@ export default function UserDetails() {
       >
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Image
-            source={require('../logo/ExigentFinale.png')}
+            source={require('../logo/ExigentMagnifyingGlasses.png')}
             style={{
-              width: 120,
-              height: 120,
+              width: 300,
+              height: 300,
               marginTop: 30,
+              marginRight: 25,
             }}
           />
 
-          <Text style={{ fontSize: 30, fontWeight: 'bold' }}> Welcome! </Text>
-          <Text style={{ fontSize: 15, textAlign: 'center', marginBottom: 20, color: '#808080' }}>
-            Mind if we grab small details from you?
+          <Text style={{ fontSize: 30, fontWeight: 'bold', marginTop: 20 }}> Let's Get Started! </Text>
+          <Text style={{ fontSize: 15, textAlign: 'center', margin: 20, color: '#808080' }}>
+            Welcome to Exigent! Set your distance, discover help nearby in a snap 
+            because safety should be simple and close at hand. Ready to get started?
           </Text>
-
-          <TextInput
-            mode="outlined"
-            label="Full Name"
-            style={{
-              width: '80%',
-              marginBottom: 5,
-            }}
-          />
-
-          <TextInput
-            mode="outlined"
-            label="Sex"
-            style={{
-              width: '80%',
-              marginBottom: 5,
-            }}
-          />
-
-          <TextInput
-            mode="outlined"
-            label="Birthday"
-            style={{
-              width: '80%',
-              marginBottom: 5,
-            }}
-          />
-
-          <TextInput
-            mode="outlined"
-            label="Full Address"
-            style={{
-              width: '80%',
-            }}
-          />
         </View>
 
         <TouchableOpacity

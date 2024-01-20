@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LocationPermission from './src/components/pages/LocationPermission';
 import HomePage from './src/components/pages/HomePage';
-import UserDetails from './src/components/pages/UserDetails';
+import GettingStarted from './src/components/pages/GettingStarted';
 import LoadingPage from './src/components/pages/LoadingPage';
 import Settings from './src/components/pages/Settings';
 
@@ -32,8 +32,8 @@ export default function App() {
             />
             <Stack.Screen
               options={{ headerShown: false }}
-              name="UserDetails"
-              component={UserDetails}
+              name="GettingStarted"
+              component={GettingStarted}
             />
             <Stack.Screen
               options={{ headerShown: false }}

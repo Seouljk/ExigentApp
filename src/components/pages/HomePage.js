@@ -31,7 +31,7 @@ const App = () => {
             value={searchQuery}
             style={styles.searchBar}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.buttonSetting}
             onPress={handleSettings}
           >
@@ -41,8 +41,8 @@ const App = () => {
                 width: 20,
                 height: 20,
               }}
-            />
-          </TouchableOpacity>
+            /> */}
+          {/* </TouchableOpacity> */}
         </View>
 
         {/* Fast Location Buttons */}
@@ -93,7 +93,7 @@ const App = () => {
 
       <View style={styles.cardContainer}>
         <View style={styles.action}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.buttonSetOne}
             onPress={() => handleButtonPress('History')}
           >
@@ -102,7 +102,7 @@ const App = () => {
               size={30}
               color= 'gray'
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={styles.actionOne}>
               <TouchableOpacity
                 style={styles.buttonMain}
@@ -117,7 +117,7 @@ const App = () => {
                 />
               </TouchableOpacity>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.buttonSetTwo}
             onPress={() => handleButtonPress('UserAccount')}
           >
@@ -126,7 +126,7 @@ const App = () => {
               size={30}
               color= 'gray'
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </View>
@@ -185,10 +185,10 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: 'white',
-    height: 80,
+    height: 60,
     width: '90%',
     borderRadius: 20,
-    marginBottom: 15,
+    marginBottom: 20,
     alignSelf: 'center',
     elevation: 3,
   },
@@ -226,10 +226,11 @@ const styles = StyleSheet.create({
     height: 20,
   },
   actionOne: {
-    marginBottom: 70,
+    marginBottom: 50,
     backgroundColor: '#dbdbdb',
     padding: 10,
     borderRadius: 50,
+    alignItems: 'center',
   },
 });
 

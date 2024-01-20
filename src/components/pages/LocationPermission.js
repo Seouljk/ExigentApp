@@ -7,7 +7,7 @@ export default function LocationPermission() {
 
   const handleShareLocation = () => {
     // Logic here
-    navigation.navigate('UserDetails');
+    navigation.navigate('GettingStarted');
   };
 
   return (
@@ -21,7 +21,7 @@ export default function LocationPermission() {
         }}
       />
       <Text style={{ fontSize: 30, fontWeight: 'bold' }}>What's Nearby?</Text>
-      <Text style={{ fontSize: 15, textAlign: 'center', marginHorizontal: 20, marginTop: 25, color: '#808080' }}>
+      <Text style={{ fontSize: 15, textAlign: 'center', margin: 20, color: '#808080' }}>
         Hey there! Mind if we grab your location? It'll enhance your experience with personalized, location-based features.
       </Text>
 
