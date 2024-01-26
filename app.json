@@ -1,5 +1,17 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.ey.."
+        },
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map."
+        }
+      ]
+    ],
     "name": "FinalProject",
     "slug": "FinalProject",
     "version": "1.0.0",
