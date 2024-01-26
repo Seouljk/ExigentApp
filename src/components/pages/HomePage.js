@@ -161,13 +161,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#dbdbdb',
   },
-  map: {
+  mapContainer: {
     flex: 1,
-    height: '50%', // Adjust the height of the map as needed
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    height: '80%',
     width: '100%',
   },
   contentContainer: {
     flex: 1,
+    paddingBottom: 100, // Add padding to prevent content from being covered by buttons
   },
   searchBarContainer: {
     flexDirection: 'row',
@@ -220,7 +225,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     elevation: 3,
   },
-  buttonMain:{
+  buttonMain: {
     backgroundColor: '#3a88ed',
     borderRadius: 50,
     height: 80,
