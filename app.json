@@ -1,17 +1,27 @@
 {
   "expo": {
-    "plugins": [
-      [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "sk.ey.."
-        },
-        "expo-location",
-        {
-          "locationWhenInUsePermission": "Show current location on map."
+    "ios": {
+      
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow"
         }
-      ]
-    ],
+      },
+      "supportsTablet": true,
+      "permissions": ["location_when_in_use"]
+    },
+    "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow"
+        }
+      },
+      "permissions": ["ACCESS_FINE_LOCATION"],
+      "adaptiveIcon": { 
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
     "name": "FinalProject",
     "slug": "FinalProject",
     "version": "1.0.0",
@@ -26,15 +36,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
     "web": {
       "favicon": "./assets/favicon.png"
     }
