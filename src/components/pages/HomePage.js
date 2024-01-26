@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Image } from 'react-native';
+import MapboxGL from "@react-native-mapbox-gl/maps";
 import { Searchbar, Icon } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-const App = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+MapboxGL.setConnected(true);
+MapboxGL.setAccessToken("pk.eyJ1IjoiZmVpa2FyIiwiYSI6ImNscnJvYnRvcjAwaHoyeHFlZjh5cGJkMWEifQ.U08scoQIrWdd6go5pvHApQ");
 
+
+const HomePage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
 
   const handleSettings = () => {
@@ -21,9 +25,6 @@ const App = () => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-
-        {/* Search Bar w/ Settings */}
-
         <View style={styles.searchBarContainer}>
           <Searchbar
             placeholder="Search"
@@ -89,6 +90,28 @@ const App = () => {
         </View>
       </View>
       
+{/* Mapbox */}
+<View style={styles.mapContainer}>
+          <MapboxGL.MapView style={styles.map}>
+            <MapboxGL.Camera
+              zoomLevel={12}
+              centerCoordinate={[8.5053174, 124.6601013]}
+            />
+
+            {/* Add markers as needed */}
+            <MapboxGL.PointAnnotation
+              id="Police Station 1"
+              coordinate={[8.4982077, 124.6602039]}
+            >
+              <Image
+                source={require('../../../src/components/logo/location.png')}
+                style={{ width: 30, height: 30 }}
+              />
+            </MapboxGL.PointAnnotation>
+            {/* Add more markers as needed */}
+          </MapboxGL.MapView>
+        </View>
+
       {/* Buttons Below */}
 
       <View style={styles.cardContainer}>
@@ -200,6 +223,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,  },
+
   buttonSetOne: {
     backgroundColor: 'white',
     borderRadius: 50,
@@ -234,4 +263,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default HomePage;
