@@ -1,16 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Image } from 'react-native';
-import MapboxGL from "@react-native-mapbox-gl/maps";
+import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
 import { Searchbar, Icon } from 'react-native-paper';
+import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
-MapboxGL.setConnected(true);
-MapboxGL.setAccessToken("pk.eyJ1IjoiZmVpa2FyIiwiYSI6ImNscnJvYnRvcjAwaHoyeHFlZjh5cGJkMWEifQ.U08scoQIrWdd6go5pvHApQ");
-
-
-const HomePage = () => {
+const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [location, setLocation] = useState(null);
+  const [mapRegion, setMapRegion] = useState(null);
+
   const navigation = useNavigation();
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Location permission denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location.coords);
+
+      // Set the initial map region based on the current location
+      setMapRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    })();
+  }, []);
 
   const handleSettings = () => {
     // Logic here
@@ -20,11 +41,32 @@ const HomePage = () => {
   const handleButtonPress = (value) => {
     // Button Logic Here
     console.log(`Button pressed: ${value}`);
+    if (value === 'SettingDistance' && location) {
+      // Set the map region to the current location
+      setMapRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.contentContainer}>
+      <MapView style={styles.map} region={mapRegion}>
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="Your Location"
+            description="You are here"
+          />
+        )}
+      </MapView>
+      <ScrollView style={styles.contentContainer}>
         <View style={styles.searchBarContainer}>
           <Searchbar
             placeholder="Search"
@@ -32,25 +74,10 @@ const HomePage = () => {
             value={searchQuery}
             style={styles.searchBar}
           />
-          {/* <TouchableOpacity
-            style={styles.buttonSetting}
-            onPress={handleSettings}
-          >
-            <Image
-              source={require('../logo/settings.png')}
-              style={{
-                width: 20,
-                height: 20,
-              }}
-            /> */}
-          {/* </TouchableOpacity> */}
         </View>
-
-        {/* Fast Location Buttons */}
-
         <View style={styles.horizontalScrollView}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity
+          <TouchableOpacity
               style={styles.button}
               onPress={() => handleButtonPress('MyHome')}
             >
@@ -88,69 +115,42 @@ const HomePage = () => {
             </TouchableOpacity>
           </ScrollView>
         </View>
-      </View>
-      
-{/* Mapbox */}
-<View style={styles.mapContainer}>
-          <MapboxGL.MapView style={styles.map}>
-            <MapboxGL.Camera
-              zoomLevel={12}
-              centerCoordinate={[8.5053174, 124.6601013]}
-            />
-
-            {/* Add markers as needed */}
-            <MapboxGL.PointAnnotation
-              id="Police Station 1"
-              coordinate={[8.4982077, 124.6602039]}
-            >
-              <Image
-                source={require('../../../src/components/logo/location.png')}
-                style={{ width: 30, height: 30 }}
-              />
-            </MapboxGL.PointAnnotation>
-            {/* Add more markers as needed */}
-          </MapboxGL.MapView>
-        </View>
-
-      {/* Buttons Below */}
-
-      <View style={styles.cardContainer}>
-        <View style={styles.action}>
-          {/* <TouchableOpacity
-            style={styles.buttonSetOne}
-            onPress={() => handleButtonPress('History')}
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.buttonSetOne}
+          onPress={() => handleButtonPress('History')}
+        >
+          <Icon
+            source="history"
+            size={30}
+            color= 'gray'
+          />
+        </TouchableOpacity>
+        <View style={styles.actionOne}>
+          <TouchableOpacity
+            style={styles.buttonMain}
+            onPress={() => handleButtonPress('SettingDistance')}
           >
-            <Icon
-              source="history"
-              size={30}
-              color= 'gray'
+            <Image
+              source={require('../logo/ExigentFinale2.png')}
+              style={{
+                width: 50,
+                height: 50,
+              }}
             />
-          </TouchableOpacity> */}
-          <View style={styles.actionOne}>
-              <TouchableOpacity
-                style={styles.buttonMain}
-                onPress={() => handleButtonPress('SettingDistance')}
-              >
-                <Image
-                  source={require('../logo/ExigentFinale2.png')}
-                  style={{
-                    width: 50,
-                    height: 50,
-                  }}
-                />
-              </TouchableOpacity>
-          </View>
-          {/* <TouchableOpacity
-            style={styles.buttonSetTwo}
-            onPress={() => handleButtonPress('UserAccount')}
-          >
-            <Icon
-              source="account"
-              size={30}
-              color= 'gray'
-            />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={styles.buttonSetTwo}
+          onPress={() => handleButtonPress('UserAccount')}
+        >
+          <Icon
+            source="account"
+            size={30}
+            color= 'gray'
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -160,6 +160,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#dbdbdb',
+  },
+  map: {
+    flex: 1,
+    height: '50%', // Adjust the height of the map as needed
+    width: '100%',
   },
   contentContainer: {
     flex: 1,
@@ -223,12 +228,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mapContainer: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,  },
-
   buttonSetOne: {
     backgroundColor: 'white',
     borderRadius: 50,
@@ -263,4 +262,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default App;
