@@ -1,16 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
 import { Searchbar, Icon } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import MapViewDirections from 'react-native-maps-directions';
+
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState(null);
-  const [mapRegion, setMapRegion] = useState(null);
+  const [setMapRegion] = useState(null);
+  const mapRef = useRef(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [SelectedCategoryColor,setSelectedCategoryColor] = useState(null);
+  const [destination, setDestination] = useState(null);
+  
 
-  const navigation = useNavigation();
+  const [policeStations, setPoliceStations] = useState([]);
+  const [hospitalStations, setHospitalStations] = useState([]);
+  const [fireStations, setFireStations] = useState([]);
+  const [tanodStations, setTanodStations] = useState([]);
+
+  const resetDestination = () => {
+    setDestination(null);
+  };
+  
+
+  const handleSearchQueryChange = (searchQuery) => {
+    setSearchQuery(searchQuery);
+  
+    // Reset all station data and selected category when a new search query is entered
+    setPoliceStations([]);
+    setHospitalStations([]);
+    setFireStations([]);
+    setTanodStations([]);
+    setSelectedCategory(null);
+  
+    if (
+      searchQuery.toLowerCase() === 'police' ||
+      searchQuery.toLowerCase() === 'police station'
+      || searchQuery.toLowerCase() === 'police stations'
+    ) {
+      // Search for police stations near the current location
+      searchNearbyPlaces('police_station', 1000).then((result) => {
+        setPoliceStations(result);
+        setSelectedCategory('PoliceStation');
+        setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+        setSearchQuery('');
+      });
+    } else if (
+      searchQuery.toLowerCase() === 'hospital' ||
+      searchQuery.toLowerCase() === 'hospitals'
+      ) {
+      // Search for hospitals near current location
+      searchNearbyPlaces('hospital', 1000).then((result) => {
+        setHospitalStations(result);
+        setSelectedCategory('Hospital');
+        setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+        setSearchQuery('');
+      });
+    } else if (
+      searchQuery.toLowerCase() === 'fire station' ||
+      searchQuery.toLowerCase() === 'fire stations'
+    ) {
+      // Search for fire stations near current location
+      searchNearbyPlaces('fire_station', 1000).then((result) => {
+        setFireStations(result);
+        setSelectedCategory('FireStation');
+        setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+        setSearchQuery('');
+      });
+    } else {
+      // Perform the regular filtering based on the search query
+      const filterStations = (stations) =>
+        stations.filter((station) =>
+          station.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+  
+      setPoliceStations(filterStations(policeStations));
+      setHospitalStations(filterStations(hospitalStations));
+      setFireStations(filterStations(fireStations));
+      setTanodStations(filterStations(tanodStations));
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -20,41 +92,140 @@ const App = () => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
+      const locationSubscription = Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.High, timeInterval: 5000, distanceInterval: 5 },
+        (newLocation) => {
+          setLocation(newLocation.coords);
+        }
+      );
 
-      // Set the initial map region based on the current location
-      setMapRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
+      return () => {
+        if (locationSubscription) {
+          locationSubscription.remove();
+        }
+      };
     })();
   }, []);
 
-  const handleSettings = () => {
-    // Logic here
-    navigation.navigate('Settings');
-  };
-
-  const handleButtonPress = (value) => {
-    // Button Logic Here
+  const handleButtonPress = (value, label) => {
     console.log(`Button pressed: ${value}`);
     if (value === 'SettingDistance' && location) {
-      // Set the map region to the current location
-      setMapRegion({
+      // Set the map region directly
+      mapRef.current.animateToRegion({
         latitude: location.latitude,
         longitude: location.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }, 300);
+    }
+
+
+    if (value === 'Clear') {
+      // Clear all stations and reset destination
+      setPoliceStations([]);
+      setHospitalStations([]);
+      setFireStations([]);
+      setTanodStations([]);
+      setSelectedCategory(null);
+      setSearchQuery('');
+      resetDestination(); // Call the resetDestination function
+    }
+   // Handle specific button press actions
+  if (value === 'PoliceStation') {
+    searchNearbyPlaces('police', 1000 ).then((result) => {
+      setPoliceStations(result);
+      setSelectedCategory('PoliceStation');
+      setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+      setSearchQuery('');
+    });
+  }
+  if (value === 'Hospital') {
+    searchNearbyPlaces('hospital', 1000).then((result) => {
+      setHospitalStations(result);
+      setSelectedCategory('Hospital');
+      setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+      setSearchQuery('');
+    });
+  }
+  if (value === 'FireStation') {
+    searchNearbyPlaces('fire_station', 1000).then((result) => {
+      setFireStations(result);
+      setSelectedCategory('FireStation');
+      setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+      setSearchQuery('');
+    });
+  }
+  if (value === 'TanodOutpost') {
+    // Add your search logic for Tanod Outpost here
+    searchNearbyPlaces('tanod_outpost', 1000).then((result) => {
+      setTanodStations(result);
+      setSelectedCategory('TanodOutpost');
+      setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
+      setSearchQuery('');
+    });
+  }
+};
+  
+
+const searchNearbyPlaces = async (placeType, radius = 5000) => {
+  if (location) {
+    const apiKey = 'AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow';
+    const radius = 5000; // 5000 meters (adjust as needed)
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=${radius}&type=${placeType}&key=AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      // Log the entire response
+      console.log('API Response:', data);
+
+      // Handle the data (e.g., display markers on the map)
+      if (data.results && data.results.length > 0) {
+        const places = data.results.map((result) => ({
+          latitude: result.geometry.location.lat,
+          longitude: result.geometry.location.lng,
+          title: result.name,
+          description: result.vicinity,
+        }));
+
+        // Now you can use 'places' to display markers on the map
+        console.log('Nearby Places:', places);
+        return places;
+      } else {
+        console.log('No nearby places found.');
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching nearby places:', error);
+      return [];
+    }
+  }
+  return [];
+  };
+
+  // Update the onRegionChange event handler
+  const handleMapRegionChange = (region) => {
+    // Mark that the map is currently being interacted with
+    setMapRegion(region);
+
+    // Recentering the map to the current location
+    if (location) {
+      mapRef.current.animateToRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: region.latitudeDelta,
+        longitudeDelta: region.longitudeDelta,
+      }, 300);
     }
   };
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={mapRegion}>
+
+      <MapView ref={(ref) => (mapRef.current = ref)} style={styles.map}
+      showsUserLocation={true}
+>
         {location && (
           <Marker
             coordinate={{
@@ -65,13 +236,64 @@ const App = () => {
             description="You are here"
           />
         )}
+         {selectedCategory === 'PoliceStation' && policeStations.map((station, index) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: station.latitude,
+        longitude: station.longitude,
+      }}
+      title={station.title}
+      description={station.description}
+      pinColor="#0000FF" // Set the pin color based on the selected category color
+      onPress={() => setDestination({ latitude: station.latitude, longitude: station.longitude })}
+    />
+  ))}
+  {selectedCategory === 'Hospital' && hospitalStations.map((station, index) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: station.latitude,
+        longitude: station.longitude,
+      }}
+      title={station.title}
+      description={station.description}
+      pinColor="#0000FF" // Set the pin color based on the selected category color
+      onPress={() => setDestination({ latitude: station.latitude, longitude: station.longitude })}
+    />
+  ))}
+  {selectedCategory === 'FireStation' && fireStations.map((station, index) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: station.latitude,
+        longitude: station.longitude,
+      }}
+      title={station.title}
+      description={station.description}
+      pinColor="#0000FF" // Set the pin color based on the selected category color
+      onPress={() => setDestination({ latitude: station.latitude, longitude: station.longitude })}
+    />
+  ))}
+  {location && destination && (
+          <MapViewDirections
+            origin={{ latitude: location.latitude, longitude: location.longitude }}
+            destination={destination}
+            apikey={'AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow'}
+            strokeWidth={3}
+            strokeColor="green"
+          />
+        )}
       </MapView>
-      <ScrollView style={styles.contentContainer}>
+      <View style={styles.contentContainer}>
         <View style={styles.searchBarContainer}>
           <Searchbar
             placeholder="Search"
-            onChangeText={setSearchQuery}
-            value={searchQuery}
+            onChangeText={(searchQuery) => {
+             setSearchQuery(searchQuery);
+             handleSearchQueryChange(searchQuery);
+            }}
+           value={searchQuery}
             style={styles.searchBar}
           />
         </View>
@@ -79,45 +301,40 @@ const App = () => {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
               style={styles.button}
-              onPress={() => handleButtonPress('MyHome')}
+              onPress={() => handleButtonPress('Clear', 'Clear')}
             >
-              <Text style={styles.buttonText}>My Home</Text>
+              <Text style={styles.buttonText}>Clear</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleButtonPress('Hospital')}
+              onPress={() => handleButtonPress('Hospital', 'Hospital')}
             >
               <Text style={styles.buttonText}>Hospital</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleButtonPress('PoliceStation')}
+              onPress={() => handleButtonPress('PoliceStation', 'Police Station')}
             >
               <Text style={styles.buttonText}>Police Station</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleButtonPress('FireStation')}
+              onPress={() => handleButtonPress('FireStation', ' Fire Station')}
             >
               <Text style={styles.buttonText}>Fire Station</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/*<TouchableOpacity
               style={styles.button}
-              onPress={() => handleButtonPress('TanodOutpost')}
+              onPress={() => handleButtonPress('TanodOutpost', 'Tanod Outpost')}
             >
               <Text style={styles.buttonText}>Tanod Outpost</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleButtonPress('OroRescue')}
-            >
-              <Text style={styles.buttonText}>Oro Rescue</Text>
-            </TouchableOpacity>
+    </TouchableOpacity>*/}
           </ScrollView>
         </View>
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
+      </View>
+      <View style={styles.cardContainer}>
+      <View style={styles.action}>
+        {/*<TouchableOpacity
           style={styles.buttonSetOne}
           onPress={() => handleButtonPress('History')}
         >
@@ -126,7 +343,7 @@ const App = () => {
             size={30}
             color= 'gray'
           />
-        </TouchableOpacity>
+          </TouchableOpacity>*/}
         <View style={styles.actionOne}>
           <TouchableOpacity
             style={styles.buttonMain}
@@ -135,13 +352,13 @@ const App = () => {
             <Image
               source={require('../logo/ExigentFinale2.png')}
               style={{
-                width: 50,
-                height: 50,
+                width: 65,
+                height: 65,
               }}
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
+        {/*<TouchableOpacity
           style={styles.buttonSetTwo}
           onPress={() => handleButtonPress('UserAccount')}
         >
@@ -150,7 +367,8 @@ const App = () => {
             size={30}
             color= 'gray'
           />
-        </TouchableOpacity>
+            </TouchableOpacity>*/}
+            </View>
       </View>
     </View>
   );
@@ -167,12 +385,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   map: {
-    height: '80%',
-    width: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
   contentContainer: {
     flex: 1,
-    paddingBottom: 100, // Add padding to prevent content from being covered by buttons
+
   },
   searchBarContainer: {
     flexDirection: 'row',
@@ -181,6 +398,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 10,
     elevation: 3,
+    backgroundColor: 'transparent', // Make the background transparent
   },
   searchBar: {
     flex: 1,
@@ -218,20 +436,21 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: 'white',
-    height: 60,
+    height: 70,
     width: '90%',
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 30,
     alignSelf: 'center',
     elevation: 3,
   },
-  buttonMain: {
+  buttonMain:{
     backgroundColor: '#3a88ed',
     borderRadius: 50,
-    height: 80,
-    width: 80,
+    height: 90,
+    width: 90,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 50,
   },
   buttonSetOne: {
     backgroundColor: 'white',
@@ -256,11 +475,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: -30,
     height: 20,
   },
   actionOne: {
     marginBottom: 50,
-    backgroundColor: '#dbdbdb',
     padding: 10,
     borderRadius: 50,
     alignItems: 'center',
