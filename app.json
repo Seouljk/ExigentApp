@@ -1,14 +1,15 @@
 {
   "expo": {
     "ios": {
-      
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow"
         }
       },
       "supportsTablet": true,
-      "permissions": ["location_when_in_use"]
+      "permissions": [
+        "location_when_in_use"
+      ]
     },
     "android": {
       "config": {
@@ -16,11 +17,14 @@
           "apiKey": "AIzaSyAU3XsFhS2J4hVKFOXtyPgB_XI6AwNQGow"
         }
       },
-      "permissions": ["ACCESS_FINE_LOCATION"],
-      "adaptiveIcon": { 
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ],
+      "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.feikseoul.FinalProject"
     },
     "name": "FinalProject",
     "slug": "FinalProject",
@@ -38,6 +42,11 @@
     ],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "be1ae2cd-7187-475e-9160-1551a336a6b9"
+      }
     }
   }
 }
