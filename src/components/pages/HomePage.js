@@ -19,8 +19,6 @@ const App = () => {
   const [policeStations, setPoliceStations] = useState([]);
   const [hospitalStations, setHospitalStations] = useState([]);
   const [fireStations, setFireStations] = useState([]);
-  const [tanodStations, setTanodStations] = useState([]);
-
   const resetDestination = () => {
     setDestination(null);
   };
@@ -33,7 +31,6 @@ const App = () => {
     setPoliceStations([]);
     setHospitalStations([]);
     setFireStations([]);
-    setTanodStations([]);
     setSelectedCategory(null);
   
     if (
@@ -80,7 +77,6 @@ const App = () => {
       setPoliceStations(filterStations(policeStations));
       setHospitalStations(filterStations(hospitalStations));
       setFireStations(filterStations(fireStations));
-      setTanodStations(filterStations(tanodStations));
     }
   };
 
@@ -125,7 +121,6 @@ const App = () => {
       setPoliceStations([]);
       setHospitalStations([]);
       setFireStations([]);
-      setTanodStations([]);
       setSelectedCategory(null);
       setSearchQuery('');
       resetDestination(); // Call the resetDestination function
@@ -151,15 +146,6 @@ const App = () => {
     searchNearbyPlaces('fire_station', 1000).then((result) => {
       setFireStations(result);
       setSelectedCategory('FireStation');
-      setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
-      setSearchQuery('');
-    });
-  }
-  if (value === 'TanodOutpost') {
-    // Add your search logic for Tanod Outpost here
-    searchNearbyPlaces('tanod_outpost', 1000).then((result) => {
-      setTanodStations(result);
-      setSelectedCategory('TanodOutpost');
       setSelectedCategoryColor('#0000FF'); // Set the selected category color to blue
       setSearchQuery('');
     });
@@ -323,27 +309,11 @@ const searchNearbyPlaces = async (placeType, radius = 5000) => {
             >
               <Text style={styles.buttonText}>Fire Station</Text>
             </TouchableOpacity>
-            {/*<TouchableOpacity
-              style={styles.button}
-              onPress={() => handleButtonPress('TanodOutpost', 'Tanod Outpost')}
-            >
-              <Text style={styles.buttonText}>Tanod Outpost</Text>
-    </TouchableOpacity>*/}
           </ScrollView>
         </View>
       </View>
       <View style={styles.cardContainer}>
       <View style={styles.action}>
-        {/*<TouchableOpacity
-          style={styles.buttonSetOne}
-          onPress={() => handleButtonPress('History')}
-        >
-          <Icon
-            source="history"
-            size={30}
-            color= 'gray'
-          />
-          </TouchableOpacity>*/}
         <View style={styles.actionOne}>
           <TouchableOpacity
             style={styles.buttonMain}
@@ -358,16 +328,6 @@ const searchNearbyPlaces = async (placeType, radius = 5000) => {
             />
           </TouchableOpacity>
         </View>
-        {/*<TouchableOpacity
-          style={styles.buttonSetTwo}
-          onPress={() => handleButtonPress('UserAccount')}
-        >
-          <Icon
-            source="account"
-            size={30}
-            color= 'gray'
-          />
-            </TouchableOpacity>*/}
             </View>
       </View>
     </View>
@@ -404,16 +364,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     borderRadius: 10,
-  },
-  buttonSetting: {
-    height: 55,
-    width: 55,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    elevation: 3,
   },
   horizontalScrollView: {
     position: 'absolute',
